@@ -35,6 +35,7 @@ defmodule Harness.DelayedServing do
 
     spawn(fn ->
       if has_gpu_access?() do
+
         Logger.info(
           "Elixir has cuda GPU access! Starting serving #{inspect(state.serving_name)}."
         )
@@ -66,6 +67,18 @@ defmodule Harness.DelayedServing do
   """
   @spec has_gpu_access? :: boolean()
   def has_gpu_access?() do
+    Nx.global_default_backend(EXLA.Backend)
+
+    model =
+      Axon.input("data") |> Axon.dense(32) |> Axon.relu() |> Axon.dense(1) |> Axon.softmax()
+
+    {inputs, _next_key} =
+      Nx.Random.key(9999) |> Nx.Random.uniform(shape: {2, 128})
+
+    {init_fn, predict_fn} = Axon.build(model, compiler: EXLA)
+    params = init_fn.(inputs, %{})
+    predict_fn.(params, inputs) |> IO.inspect(label: :function_working)
+
     try do
       case Nx.tensor(0) do
         # :host == CPU
