@@ -8,13 +8,14 @@ defmodule Harness.Llama2Chat do
   def serving() do
     # NOTE: After the model is downloaded, you can toggle to `offline: true` to
     #       only use the locally cached files and not reach out to HF at all.
-    llama_2 = {:hf, "meta-llama/Llama-3.2-3B-Instruct-QLORA_INT4_EO8", auth_token: "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"}
+    hf_token = System.fetch_env!("HF_TOKEN")
+    repo = {:hf, "meta-llama/Llama-2-7b-chat-hf", auth_token: hf_token}
 
-    {:ok, model_info} = Bumblebee.load_model(llama_2)
+    {:ok, model_info} = Bumblebee.load_model(repo)
 
-    {:ok, tokenizer} = Bumblebee.load_tokenizer(llama_2)
+    {:ok, tokenizer} = Bumblebee.load_tokenizer(repo)
 
-    {:ok, generation_config} = Bumblebee.load_generation_config(llama_2)
+    {:ok, generation_config} = Bumblebee.load_generation_config(repo)
 
     generation_config =
       Bumblebee.configure(generation_config,
