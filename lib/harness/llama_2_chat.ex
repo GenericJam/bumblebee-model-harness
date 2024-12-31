@@ -8,7 +8,7 @@ defmodule Harness.Llama2Chat do
   def serving() do
     # NOTE: After the model is downloaded, you can toggle to `offline: true` to
     #       only use the locally cached files and not reach out to HF at all.
-    llama_2 = {:hf, "Trelis/Llama-2-7b-chat-hf-function-calling-v3", offline: false}
+    llama_2 = {:hf, "meta-llama/Llama-3.2-3B-Instruct-QLORA_INT4_EO8", auth_token: "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"}
 
     {:ok, model_info} = Bumblebee.load_model(llama_2, type: :bf16, backend: EXLA.Backend)
 
