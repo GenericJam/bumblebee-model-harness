@@ -10,7 +10,7 @@ defmodule Harness.Llama2Chat do
     #       only use the locally cached files and not reach out to HF at all.
     llama_2 = {:hf, "meta-llama/Llama-3.2-3B-Instruct-QLORA_INT4_EO8", auth_token: "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"}
 
-    {:ok, model_info} = Bumblebee.load_model(llama_2, type: :bf16, backend: EXLA.Backend)
+    {:ok, model_info} = Bumblebee.load_model(llama_2)
 
     {:ok, tokenizer} = Bumblebee.load_tokenizer(llama_2)
 
